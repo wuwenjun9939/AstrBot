@@ -66,6 +66,9 @@ class RateLimitStage(Stage):
                 if len(timestamps) < self.rate_limit_count:
                     timestamps.append(now)
                     break
+                if not timestamps: # 保底判断：如果队列为空（例如 count 被设为 0）
+                    timestamps.append(now)
+                    break
                 next_window_time = timestamps[0] + self.rate_limit_time
                 stall_duration = (next_window_time - now).total_seconds() + 0.3
 
